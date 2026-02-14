@@ -138,4 +138,4 @@ The built files will be in `client/dist/`. Serve them with any static file serve
 
 ## License
 
-MIT
+All rights reserved. This code is provided for viewing purposes only. You may not copy, modify, distribute, or use this code without explicit written permission from the author.
