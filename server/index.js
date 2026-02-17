@@ -2,10 +2,21 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { RoomManager } from './RoomManager.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 app.use(cors());
+
+// Serve the built client
+app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
+app.get('*', (req, res, next) => {
+  if (req.url.startsWith('/socket.io')) return next();
+  res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'));
+});
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -371,7 +382,7 @@ io.on('connection', (socket) => {
   }
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 httpServer.listen(PORT, '0.0.0.0', () => {
-  console.log(`Gamba server running on http://0.0.0.0:${PORT}`);
+  console.log(`Gamba server running on port ${PORT}`);
 });
